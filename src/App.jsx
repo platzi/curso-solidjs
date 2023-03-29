@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from "solid-js";
+import { createEffect, createSignal, Show } from "solid-js";
 
 function App() {
   const [darkMode, setDarkMode] = createSignal(false);
@@ -11,13 +11,15 @@ function App() {
     setDarkMode(!darkMode());
   }
 
+  const [completed, setCompleted] = createSignal(false);
+
   return (
     <div class="w-full h-full min-h-screen flex items-center justify-center dark:bg-gray-600 dark:text-white">
       <button
         class="text-2xl fixed top-0 right-0"
         onClick={() => toggleDarkMode()}
       >
-        🌚
+        {darkMode() ? "🌞" : "🌚"}
       </button>
 
       <div>
@@ -27,8 +29,10 @@ function App() {
         <ul>
           <li>
             <input type="checkbox" checked />
-            <span>
-              <s style="pointer-events: none">Abrazar Pinguino</s>
+            <span onClick={() => setCompleted(!completed())}>
+              <Show when={completed()} fallback={"Abrazar Pinguino"}>
+                <s style="pointer-events: none">Abrazar Pinguino</s>
+              </Show>
             </span>
             <button>❌</button>
           </li>
