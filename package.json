@@ -17,6 +17,7 @@
     "vite-plugin-solid": "^2.5.0"
   },
   "dependencies": {
+    "@solid-primitives/deep": "^0.0.102",
     "solid-js": "^1.6.10"
   }
 }

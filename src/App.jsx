@@ -1,14 +1,18 @@
-import { createMemo, createSignal, For, Show } from "solid-js";
+import { createEffect, createMemo, createSignal, For, on } from "solid-js";
 import { createStore, produce } from "solid-js/store";
+import { deepTrack } from "@solid-primitives/deep";
 import { ButtonDarkMode } from "./components/ButtonDarkMode";
 import { Todo } from "./components/Todo";
 
 function App() {
-  const [todos, setTodos] = createStore([
-    { text: "Abrazar un pinguino", completed: true },
-    { text: "Saludar pinguino", completed: false },
-    { text: "Tomarle foto a un pinguino", completed: false },
-  ]);
+  const todosLS = JSON.parse(window.localStorage.getItem("todos"));
+  const [todos, setTodos] = createStore(
+    todosLS ?? [
+      { text: "Abrazar un pinguino", completed: true },
+      { text: "Saludar pinguino", completed: false },
+      { text: "Tomarle foto a un pinguino", completed: false },
+    ]
+  );
 
   const [newItem, setNewItem] = createSignal("");
 
@@ -27,6 +31,15 @@ function App() {
 
   const completedCount = createMemo(
     () => todos.filter((todo) => todo.completed).length
+  );
+
+  createEffect(
+    on(
+      () => deepTrack(todos),
+      () => {
+        window.localStorage.setItem("todos", JSON.stringify(todos));
+      }
+    )
   );
 
   return (
