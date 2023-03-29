@@ -48,7 +48,9 @@ function App() {
           <For each={todos} fallback={"No hay elementos"}>
             {(todo, index) => (
               <li>
-                <Todo />
+                <Todo todo={todo} index={index()}>
+                  {todo.text}
+                </Todo>
               </li>
             )}
           </For>

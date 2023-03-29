@@ -1,13 +1,13 @@
-export function Todo() {
+export function Todo(props) {
   return (
     <>
       <input
         type="checkbox"
-        checked={(console.log("test"), todo.completed)}
+        checked={(console.log("test"), props.todo.completed)}
         onChange={() => {
           setTodos(
             produce((todos) => {
-              todos[index()].completed = !todos[index()].completed;
+              todos[props.index].completed = !todos[props.index].completed;
             })
           );
         }}
@@ -21,16 +21,16 @@ export function Todo() {
           e.target.setAttribute("contenteditable", false);
           setTodos(
             produce((todos) => {
-              todos[index()].text = e.target.innerText;
+              todos[props.index].text = e.target.innerText;
             })
           );
         }}
       >
-        <Show when={todo.completed} fallback={todo.text}>
-          <s style="pointer-events: none">{todo.text}</s>
+        <Show when={props.todo.completed} fallback={props.children}>
+          <s style="pointer-events: none">{props.children}</s>
         </Show>
       </span>
-      <button onClick={() => removeTodo(index())}>❌</button>
+      <button onClick={() => removeTodo(props.index)}>❌</button>
     </>
   );
 }
