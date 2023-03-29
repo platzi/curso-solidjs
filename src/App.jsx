@@ -11,17 +11,16 @@ function App() {
     setDarkMode(!darkMode());
   }
 
-  const [todos, setTodos] = createSignal([
-    { text: "Abrazar un pinguino", completed: true },
-    { text: "Saludar pinguino", completed: false },
-    { text: "Tomarle foto a un pinguino", completed: false },
-  ]);
+  const [todos, setTodos] = createSignal([]);
 
   const [newItem, setNewItem] = createSignal("");
 
   function addTodo() {
+    const [text, setText] = createSignal(newItem());
+    const [completed, setCompleted] = createSignal(false);
+
     if (newItem()) {
-      setTodos([...todos(), { text: newItem(), completed: false }]);
+      setTodos([...todos(), { text, completed, setText, setCompleted }]);
       setNewItem("");
     }
   }
@@ -33,7 +32,7 @@ function App() {
   }
 
   const completedCount = createMemo(
-    () => todos().filter((todo) => todo.completed).length
+    () => todos().filter((todo) => todo.completed()).length
   );
 
   return (
@@ -62,15 +61,9 @@ function App() {
               <li>
                 <input
                   type="checkbox"
-                  checked={(console.log("test"), todo.completed)}
+                  checked={(console.log("test"), todo.completed())}
                   onChange={() => {
-                    setTodos((oldTodos) =>
-                      oldTodos.map((t, i) => {
-                        return i === index()
-                          ? { ...t, completed: !t.completed }
-                          : t;
-                      })
-                    );
+                    todo.setCompleted(!todo.completed());
                   }}
                 />
                 <span
@@ -80,17 +73,11 @@ function App() {
                   }}
                   onBlur={(e) => {
                     e.target.setAttribute("contenteditable", false);
-                    setTodos((oldTodos) =>
-                      oldTodos.map((t, i) => {
-                        return i === index()
-                          ? { ...t, text: e.target.innerText }
-                          : t;
-                      })
-                    );
+                    todo.setText(e.target.innerText);
                   }}
                 >
-                  <Show when={todo.completed} fallback={todo.text}>
-                    <s style="pointer-events: none">{todo.text}</s>
+                  <Show when={todo.completed()} fallback={todo.text()}>
+                    <s style="pointer-events: none">{todo.text()}</s>
                   </Show>
                 </span>
                 <button onClick={() => removeTodo(index())}>❌</button>
