@@ -1,4 +1,4 @@
-import { createEffect, createSignal, For, Show } from "solid-js";
+import { createEffect, createMemo, createSignal, For, Show } from "solid-js";
 
 function App() {
   const [darkMode, setDarkMode] = createSignal(false);
@@ -31,6 +31,10 @@ function App() {
     newTodos.splice(index, 1);
     setTodos(newTodos);
   }
+
+  const completedCount = createMemo(
+    () => todos().filter((todo) => todo.completed).length
+  );
 
   return (
     <div class="w-full h-full min-h-screen flex items-center justify-center dark:bg-gray-600 dark:text-white">
@@ -94,7 +98,9 @@ function App() {
             )}
           </For>
         </ul>
-        <p class="text-sm mt-4">Completed count: {0}</p>
+        <p class="text-sm mt-4">
+          Completed count: {console.log("completed", completedCount())}
+        </p>
       </div>
     </div>
   );
