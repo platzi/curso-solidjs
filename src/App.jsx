@@ -86,7 +86,7 @@ function App() {
           </For>
         </ul>
         <p class="text-sm mt-4">
-          Completed count: {console.log("completed", completedCount())}
+          Completed count: {(console.log("completed"), completedCount())}
         </p>
       </div>
     </div>
