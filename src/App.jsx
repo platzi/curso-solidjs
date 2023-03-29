@@ -32,15 +32,27 @@ function App() {
         <button class="px-2 border">Add</button>
         <ul>
           <For each={todos()} fallback={"No hay elementos"}>
-            {(todo) => (
+            {(todo, index) => (
               <li>
-                <input type="checkbox" checked={todo.completed} />
+                <input
+                  type="checkbox"
+                  checked={(console.log("test"), todo.completed)}
+                  onChange={() => {
+                    setTodos((oldTodos) =>
+                      oldTodos.map((t, i) => {
+                        return i === index()
+                          ? { ...t, completed: !t.completed }
+                          : t;
+                      })
+                    );
+                  }}
+                />
                 <span>
                   <Show when={todo.completed} fallback={todo.text}>
                     <s style="pointer-events: none">{todo.text}</s>
                   </Show>
                 </span>
-                <button>❌</button>
+                <button onClick={() => removeTodo(index())}>❌</button>
               </li>
             )}
           </For>
