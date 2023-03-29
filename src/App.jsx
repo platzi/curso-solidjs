@@ -1,4 +1,4 @@
-import { createEffect, createMemo, createSignal, For, on } from "solid-js";
+import { createEffect, createMemo, createSignal, For } from "solid-js";
 import { createStore, produce } from "solid-js/store";
 import { deepTrack } from "@solid-primitives/deep";
 import { ButtonDarkMode } from "./components/ButtonDarkMode";
@@ -33,14 +33,9 @@ function App() {
     () => todos.filter((todo) => todo.completed).length
   );
 
-  createEffect(
-    on(
-      () => deepTrack(todos),
-      () => {
-        window.localStorage.setItem("todos", JSON.stringify(todos));
-      }
-    )
-  );
+  createEffect(() => {
+    window.localStorage.setItem("todos", JSON.stringify(deepTrack(todos)));
+  });
 
   return (
     <div class="w-full h-full min-h-screen flex items-center justify-center dark:bg-gray-600 dark:text-white">
