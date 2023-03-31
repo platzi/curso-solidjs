@@ -29,9 +29,15 @@ function App() {
     setTodos(produce((todos) => todos.splice(index, 1)));
   }
 
-  const completedCount = createMemo(
-    () => todos.filter((todo) => todo.completed).length
+  const uncompletedTodos = createMemo(() =>
+    todos.filter((todo) => !todo.completed)
   );
+
+  const completedTodos = createMemo(() =>
+    todos.filter((todo) => todo.completed)
+  );
+
+  const completedCount = createMemo(() => completedTodos().length);
 
   createEffect(() => {
     window.localStorage.setItem("todos", JSON.stringify(deepTrack(todos)));
@@ -52,35 +58,68 @@ function App() {
         <button class="px-2 border" onClick={addTodo}>
           Add
         </button>
-        <ul>
-          <For each={todos} fallback={"No hay elementos"}>
-            {(todo, index) => (
-              <li>
-                <Todo
-                  todo={todo}
-                  index={index()}
-                  onInputChange={() => {
-                    setTodos(
-                      produce((todos) => {
-                        todos[index()].completed = !todos[index()].completed;
-                      })
-                    );
-                  }}
-                  onTextChange={(text) => {
-                    setTodos(
-                      produce((todos) => {
-                        todos[index()].text = text;
-                      })
-                    );
-                  }}
-                  onRemove={() => removeTodo(index())}
-                >
-                  {todo.text}
-                </Todo>
-              </li>
-            )}
-          </For>
-        </ul>
+        <div class="flex gap-4">
+          <ul>
+            <h3 class="underline">ToDo</h3>
+            <For each={uncompletedTodos()} fallback={"No hay elementos"}>
+              {(todo, index) => (
+                <li>
+                  <Todo
+                    todo={todo}
+                    index={index()}
+                    onInputChange={() => {
+                      setTodos(
+                        produce((todos) => {
+                          todos[index()].completed = !todos[index()].completed;
+                        })
+                      );
+                    }}
+                    onTextChange={(text) => {
+                      setTodos(
+                        produce((todos) => {
+                          todos[index()].text = text;
+                        })
+                      );
+                    }}
+                    onRemove={() => removeTodo(index())}
+                  >
+                    {todo.text}
+                  </Todo>
+                </li>
+              )}
+            </For>
+          </ul>
+          <ul>
+            <h3 class="underline">Completed</h3>
+            <For each={completedTodos()} fallback={"No hay elementos"}>
+              {(todo, index) => (
+                <li>
+                  <Todo
+                    todo={todo}
+                    remove={true}
+                    onInputChange={() => {
+                      setTodos(
+                        produce((todos) => {
+                          todos[index()].completed = !todos[index()].completed;
+                        })
+                      );
+                    }}
+                    onTextChange={(text) => {
+                      setTodos(
+                        produce((todos) => {
+                          todos[index()].text = text;
+                        })
+                      );
+                    }}
+                    onRemove={() => removeTodo(index())}
+                  >
+                    {todo.text}
+                  </Todo>
+                </li>
+              )}
+            </For>
+          </ul>
+        </div>
         <p class="text-sm mt-4">
           Completed count: {(console.log("completed"), completedCount())}
         </p>

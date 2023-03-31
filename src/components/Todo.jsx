@@ -1,3 +1,5 @@
+import { Show } from "solid-js";
+
 export function Todo(props) {
   return (
     <>
@@ -20,7 +22,9 @@ export function Todo(props) {
           <s style="pointer-events: none">{props.children}</s>
         </Show>
       </span>
-      <button onClick={props.onRemove}>❌</button>
+      <Show when={props.remove}>
+        <button onClick={props.onRemove}>❌</button>
+      </Show>
     </>
   );
 }
