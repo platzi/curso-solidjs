@@ -52,7 +52,7 @@ function App() {
                     <s style="pointer-events: none">{todo.text}</s>
                   </Show>
                 </span>
-                <button onClick={() => removeTodo(index())}>❌</button>
+                <button>❌</button>
               </li>
             )}
           </For>
